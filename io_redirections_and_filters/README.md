@@ -81,3 +81,47 @@ $$\text{username} : \text{password\_placeholder(x)} : \text{UID} : \text{GID} : 
 * **`/etc/shadow`**: Securely stores encrypted user password data, requiring root access to read.
 
 ---
+
+
+# Shell I/O Redirection & Filters — Command Cheat Sheet
+
+A comprehensive quick-reference guide tracking the command lines and text-manipulation utilities designed during the project tasks.
+
+---
+
+## 📋 Command Reference Matrix
+
+| Task File | Objective / Operation | Core Command String |
+| :--- | :--- | :--- |
+| `10-no_more_js` | Delete all regular `.js` files recursively | `find . -type f -name "*.js" -delete` |
+| `11-directories` | Count all directories & sub-directories (excl. `.`/`..`) | `find . -mindepth 1 -type d \| wc -l` |
+| `12-newest_files` | Display 10 newest files sorted newest to oldest | `ls -t1 \| head -n 10` |
+| `13-unique` | Output words appearing exactly once from a list | `sort \| uniq -u` |
+| `14-root` | Parse lines containing the pattern "root" | `grep "root" /etc/passwd` |
+| `15-countthatword`| Count lines containing the pattern "bin" | `grep -c "bin" /etc/passwd` |
+| `16-whatsnext` | Display matching pattern "root" + 3 lines after | `grep -A 3 "root" /etc/passwd` |
+| `17-hidethis` | Invert match to show lines without "bin" | `grep -v "bin" /etc/passwd` |
+| `18-letteronly` | Extract lines starting strictly with a letter | `grep '^[a-zA-Z]' /etc/ssh/sshd_config` |
+| `19-A_and_c` | Translate characters (A $\rightarrow$ Z, c $\rightarrow$ e) | `tr 'Ac' 'Ze'` |
+| `20-hi_c` | Strip out all occurrences of 'c' and 'C' | `tr -d 'cC'` |
+| `21-reverse` | Reverse character order of standard input streams | `rev` |
+| `22-users_and_homes`| Extract and sort users with their home paths | `cut -d: -f1,6 /etc/passwd \| sort` |
+
+---
+
+## 🛠️ Tool Deep Dive
+
+### 1. The `find` Command
+Used for directory traversal and selective target asset operations.
+* `-type f` / `-type d` : Filter purely for regular files or directories respectively.
+* `-mindepth 1` : Forces omission of the baseline matching directory (`.`).
+* `-delete` : Performs an atomic removal on items matching preceding conditions.
+
+### 2. Stream Filters (`grep`, `tr`, `cut`)
+* **`grep`**: Regular expression search. Use `-v` to invert matching, `-c` to tally instances, and `-A [n]` for trailing context.
+* **`tr`**: Translate or delete tokens out of a character stream sequence.
+* **`cut`**: Splice tabular files horizontally using structural indicators like `-d:` (colon field extraction).
+
+### 3. Pipeline Aggregators (`sort`, `uniq`, `wc`)
+* `sort | uniq -u` isolates unique records cleanly. 
+* `wc -l` generates row tallies from input vectors.
