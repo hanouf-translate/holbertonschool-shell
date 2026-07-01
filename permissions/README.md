@@ -81,5 +81,83 @@ A normal user **cannot give away file ownership** to someone else for major secu
 * **The Trailing Newline:** You must hit `Enter` after line 2! UNIX standards dictate that a "line" must end with a newline character `\n`. If a file lacks this final break, tools like `wc -l` will fail to count it as a valid line, and compilers/automated checkers might read it as corrupted or incomplete text.
 
 
+# Linux Permissions & Ownership Command Guide
 
-Good luck crushing the sandbox tasks! Do you have a specific task in this set that you're working on right now?
+This repository contains a reference guide for managing files, users, groups, and permissions within a Linux environment, as implemented during the Holberton School shell permissions tasks.
+
+---
+
+## 📋 Command Summary Table
+
+| Command | Action | Key Flags Used |
+| :--- | :--- | :--- |
+| `chown` | Changes file/directory owner | `-h` (modify symlink), `--from` (conditional) |
+| `chgrp` | Changes group ownership | — |
+| `chmod` | Alters file/directory read/write/execute permissions | `+x`, `u+x` |
+| `wc` | Counts lines, words, or bytes | `-c` (byte count check) |
+| `git update-index` | Flags files with specialized Git metadata properties | `--chmod=+x` |
+
+---
+
+## 🛠️ Deep-Dive Command Explanations
+
+### 1. `chown` (Change Owner)
+Used to alter the user and/or group ownership of a file or directory.
+* **Basic Syntax (User Only):**
+  ```bash
+  chown betty hello
+  ```
+  *Changes the owner of the file `hello` to the user `betty`.*
+* **Combined Syntax (User & Group):**
+  ```bash
+  chown vincent:staff *
+  ```
+  *Changes the owner to `vincent` and the group owner to `staff` for all non-hidden items (`*`) in the working directory.*
+* **Symbolic Link Modification (`-h`):**
+  ```bash
+  chown -h vincent:staff _hello
+  ```
+  *The `-h` flag prevents `chown` from following the link. It safely updates the ownership of the symlink `_hello` itself instead of the file it points to.*
+* **Conditional Ownership Changes (`--from`):**
+  ```bash
+  chown --from=guillaume vincent hello
+  ```
+  *Changes the owner of `hello` to `vincent` **only if** its current owner is explicitly verified as `guillaume`.*
+
+### 2. `chgrp` (Change Group)
+Specifically designed to alter only the group ownership of a target.
+* **Basic Syntax:**
+  ```bash
+  chgrp school hello
+  ```
+  *Updates the group ownership of the file `hello` to `school`.*
+
+### 3. `chmod` (Change Mode)
+Modifies operational read, write, and execute permissions on files or folders.
+* **Basic Syntax:**
+  ```bash
+  chmod +x /tmp/13-change_group
+  ```
+  *Adds execute (`x`) permission flags across user, group, and others for the targeted script file.*
+
+### 4. `wc` (Word Count)
+Examines data structures to report sizing statistics. Critical for automated validation rules requiring precise tracking down to individual trailing newline bytes.
+* **Byte Sizing Verification:**
+  ```bash
+  wc -c 13-change_group
+  ```
+  *Calculates and returns the exact character/byte count of the specified file.*
+
+### 5. `git update-index`
+An advanced Git plumbing command that directly manipulates the staging index metadata.
+* **Executable Bit Mapping:**
+  ```bash
+  git update-index --add --chmod=+x 13-change_group
+  ```
+  *Forces Git to record the file as an executable program (`-rwxr-xr-x`) inside the remote repository tracking database, completely independent of local operating system behavior.*
+
+---
+
+## 💡 Sandbox & Git Best Practices
+1. **The Trailing Newline Rule:** When matching rigorous checker specifications (e.g., hitting precisely 30, 34, 36, or 47 bytes), always ensure scripts finish with a trailing newline character by hitting `Enter` on the final line in your editor.
+2. **Local Path vs. Remote Checker Paths:** Sandbox tests require copy deployment to volatile execution paths (`cp <script> /tmp/`), while automated grading engines evaluate the persistent state of your upstream repo branches (`git push`). Always sync both pathways when committing adjustments.
