@@ -1,3 +1,2 @@
 #!/bin/bash
-value=${TRUEKNOWLEDGE:-0}
 printf "%d\n" $((128 + value))
